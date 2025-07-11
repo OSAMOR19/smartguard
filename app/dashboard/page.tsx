@@ -192,19 +192,22 @@ export default function Dashboard() {
   // Simulate motion detection and threat analysis
   useEffect(() => {
     const interval = setInterval(() => {
-      if (isArmed && Math.random() > 0.8) {
+      if (isArmed && Math.random() > 0.85) {
         setMotionDetected(true)
-        setThreatLevel(Math.random() > 0.7 ? "HIGH" : "MEDIUM")
-        setTimeout(() => {
-          if (threatLevel === "HIGH") {
+        const newThreatLevel = Math.random() > 0.6 ? "HIGH" : "MEDIUM"
+        setThreatLevel(newThreatLevel)
+        
+        // Immediately trigger alarm for HIGH threats
+        if (newThreatLevel === "HIGH") {
+          setTimeout(() => {
             router.push("/alarm")
-          }
-        }, 4000)
+          }, 2000) // Reduced delay for faster response
+        }
       }
-    }, 8000)
+    }, 10000) // Increased interval to make it less frequent but more impactful
 
     return () => clearInterval(interval)
-  }, [isArmed, router, threatLevel])
+  }, [isArmed, router])
 
   const getThreatColor = (level: string) => {
     switch (level) {
@@ -645,13 +648,15 @@ export default function Dashboard() {
               </div>
             </motion.div>
 
-            {/* Enhanced Motion Status */}
+            {/* Simple AI Monitoring Status Card */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
               className={`p-6 rounded-3xl border transition-all duration-300 ${
-                motionDetected ? "bg-red-500/10 border-red-500/30" : "bg-green-500/10 border-green-500/30"
+                motionDetected 
+                  ? "bg-red-500/10 border-red-500/30" 
+                  : "bg-green-500/10 border-green-500/30"
               }`}
             >
               <div className="flex items-center justify-between">
@@ -668,11 +673,10 @@ export default function Dashboard() {
                   </motion.div>
                   <div>
                     <p className={`font-bold text-lg ${motionDetected ? "text-red-400" : "text-green-400"}`}>
-                      {motionDetected ? "AI Threat Analysis Active!" : "All Clear - AI Monitoring"}
+                      {motionDetected ? "AI Threat Detected!" : "All Clear - AI Monitoring"}
                     </p>
-                    <p className="text-gray-400">
-                      Last activity: {cameraFeeds[selectedCamera].lastMotion} •
-                      <span className="ml-1 text-blue-400">AI Confidence: 98%</span>
+                    <p className="text-gray-400 text-sm">
+                      {motionDetected ? "Immediate action required" : "All systems secure"}
                     </p>
                   </div>
                 </div>
@@ -688,10 +692,11 @@ export default function Dashboard() {
                   <Button
                     size="sm"
                     variant="ghost"
-                    className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 rounded-xl"
+                    onClick={() => router.push("/alarm")}
+                    className="text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl"
                   >
-                    <Zap className="w-4 h-4 mr-1" />
-                    Analyze
+                    <AlertTriangle className="w-4 h-4 mr-1" />
+                    Trigger Alarm
                   </Button>
                 </div>
               </div>

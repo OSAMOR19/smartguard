@@ -73,6 +73,24 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* Prevent autofill white background */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px rgba(31, 41, 55, 1) inset !important;
+    -webkit-text-fill-color: white !important;
+    background-color: rgba(31, 41, 55, 1) !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  /* Firefox autofill styles */
+  input:-moz-autofill,
+  input:-moz-autofill:focus {
+    background-color: rgba(31, 41, 55, 1) !important;
+    color: white !important;
+  }
+
   /* Custom scrollbar for webkit browsers */
   ::-webkit-scrollbar {
     width: 2px;
